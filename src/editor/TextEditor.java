@@ -25,7 +25,6 @@ public class TextEditor extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
-
     }
 
     private JMenuBar menuCreator(){
@@ -36,41 +35,27 @@ public class TextEditor extends JFrame {
         JMenuItem load = new JMenuItem("Load");
         JMenuItem exit = new JMenuItem("Exit");
 
-        load.addActionListener( actionEvent -> {
-            textArea.setText( fileLoader.loadFile( textField.getText() ) );
-        });
-        save.addActionListener( actionEvent -> {
-            fileLoader.saveFile( textField.getText(), textArea.getText());
-        });
-
-        exit.addActionListener( actionEvent -> {
-            dispose();
-        });
+        load.addActionListener( actionEvent -> textArea.setText( fileLoader.loadFile( textField.getText() ) ));
+        save.addActionListener( actionEvent -> fileLoader.saveFile( textField.getText(), textArea.getText() ));
+        exit.addActionListener( actionEvent -> dispose() );
 
         menu.add(save);
         menu.add(load);
         menu.addSeparator();
         menu.add(exit);
 
-
         menuBar.add(menu);
-        
 
         return menuBar;
     }
 
 
     private JPanel createFileSelectGroup(){
-
         JButton load = new JButton("Load");
         JButton save = new JButton("Save");
 
-        load.addActionListener( actionEvent -> {
-            textArea.setText( fileLoader.loadFile( textField.getText() ) );
-        });
-        save.addActionListener( actionEvent -> {
-            fileLoader.saveFile( textField.getText(), textArea.getText());
-        });
+        load.addActionListener( actionEvent -> textArea.setText( fileLoader.loadFile( textField.getText() ) ));
+        save.addActionListener( actionEvent -> fileLoader.saveFile( textField.getText(), textArea.getText() ));
 
         return formFileSelectGroup(textField,load,save);
     }
@@ -90,8 +75,6 @@ public class TextEditor extends JFrame {
                         .addComponent(save)
                         .addGap(5)
                         .addComponent(load)
-
-
         );
 
         groupLayout.setVerticalGroup(groupLayout.createParallelGroup()

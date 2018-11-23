@@ -8,7 +8,6 @@ import java.util.Scanner;
 
 public class FileLoader {
 
-
     String loadFile(String fileName)  {
         File file = new File(fileName);
 
@@ -29,9 +28,7 @@ public class FileLoader {
 
     void saveFile(String fileName, String text) {
 
-
         Scanner scName = new Scanner(fileName);
-
         /*
             If file name is empty
             use default one
@@ -41,10 +38,7 @@ public class FileLoader {
             TextEditor.textField.setText(fileName);
         }
 
-
-
         File file = new File(fileName);
-
         /*
             If file not exists, create
         */
@@ -55,8 +49,6 @@ public class FileLoader {
                 e.printStackTrace();
             }
         }
-
-
         /*
             Save the data
         */
@@ -66,12 +58,8 @@ public class FileLoader {
             while (scText.hasNext()){
                 print.println(scText.nextLine());
             }
-
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
-
     }
-
 }
