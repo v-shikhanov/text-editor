@@ -4,14 +4,18 @@ import javax.swing.*;
 import java.awt.*;
 
 public class TextEditor extends JFrame {
+    private FileLoader fileLoader = new FileLoader();
+    static JTextArea textArea = new JTextArea();
+    static JTextField textField = new JTextField();
+
+
+
     public TextEditor() {
         Dimension dimension = new Dimension(300,300);
         JPanel fileSelectGroup = createFileSelectGroup();
-        JTextArea textArea = createTextEditArea();
         JScrollPane scrollPane = new JScrollPane(textArea);
 
         createLayout(fileSelectGroup, scrollPane);
-
 
         setSize(dimension);
         setMinimumSize(dimension);
@@ -22,20 +26,18 @@ public class TextEditor extends JFrame {
 
     }
 
-    private JTextArea createTextEditArea(){
-        JTextArea textArea = new JTextArea();
-
-        textArea.setWrapStyleWord(true);
-
-        return textArea;
-    }
-
-
 
     private JPanel createFileSelectGroup(){
-        JTextField textField = new JTextField();
+
         JButton load = new JButton("Load");
         JButton save = new JButton("Save");
+
+        load.addActionListener( actionEvent -> {
+            textArea.setText( fileLoader.loadFile( textField.getText() ) );
+        });
+        save.addActionListener( actionEvent -> {
+            fileLoader.saveFile( textField.getText(), textArea.getText());
+        });
 
         return formFileSelectGroup(textField,load,save);
     }
