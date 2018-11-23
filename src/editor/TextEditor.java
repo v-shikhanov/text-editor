@@ -11,19 +11,52 @@ public class TextEditor extends JFrame {
 
 
     public TextEditor() {
-        Dimension dimension = new Dimension(300,300);
+        Dimension dimension = new Dimension(500,500);
+
+        JMenuBar menu = menuCreator();
         JPanel fileSelectGroup = createFileSelectGroup();
         JScrollPane scrollPane = new JScrollPane(textArea);
 
-        createLayout(fileSelectGroup, scrollPane);
+        createLayout(menu , fileSelectGroup, scrollPane);
 
         setSize(dimension);
         setMinimumSize(dimension);
-        setTitle("Text editor v 0.2");
+        setTitle("Text editor v 0.3");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
 
+    }
+
+    private JMenuBar menuCreator(){
+        JMenuBar menuBar = new JMenuBar();
+        JMenu menu = new JMenu("File");
+
+        JMenuItem save = new JMenuItem("Save");
+        JMenuItem load = new JMenuItem("Load");
+        JMenuItem exit = new JMenuItem("Exit");
+
+        load.addActionListener( actionEvent -> {
+            textArea.setText( fileLoader.loadFile( textField.getText() ) );
+        });
+        save.addActionListener( actionEvent -> {
+            fileLoader.saveFile( textField.getText(), textArea.getText());
+        });
+
+        exit.addActionListener( actionEvent -> {
+            dispose();
+        });
+
+        menu.add(save);
+        menu.add(load);
+        menu.addSeparator();
+        menu.add(exit);
+
+
+        menuBar.add(menu);
+        
+
+        return menuBar;
     }
 
 
@@ -83,12 +116,16 @@ public class TextEditor extends JFrame {
         groupLayout.setHorizontalGroup(groupLayout.createParallelGroup()
                 .addComponent(argument[0])
                 .addComponent(argument[1])
+                .addComponent(argument[2])
         );
 
         groupLayout.setVerticalGroup(groupLayout.createSequentialGroup()
                 .addComponent(argument[0])
                 .addComponent(argument[1])
+                .addComponent(argument[2])
         );
+
+        groupLayout.linkSize(1,argument[0], argument[1]);
 
         pack();
     }
