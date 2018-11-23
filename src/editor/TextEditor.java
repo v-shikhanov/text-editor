@@ -4,29 +4,75 @@ import javax.swing.*;
 import java.awt.*;
 
 public class TextEditor extends JFrame {
-    public TextEditor() {
-        initTextArea();
+    private FileLoader fileLoader = new FileLoader();
+    static JTextArea textArea = new JTextArea();
+    static JTextField textField = new JTextField();
 
-        setSize(300, 300);
-        setTitle("Text editor v 0.1");
+
+
+    public TextEditor() {
+        Dimension dimension = new Dimension(300,300);
+        JPanel fileSelectGroup = createFileSelectGroup();
+        JScrollPane scrollPane = new JScrollPane(textArea);
+
+        createLayout(fileSelectGroup, scrollPane);
+
+        setSize(dimension);
+        setMinimumSize(dimension);
+        setTitle("Text editor v 0.2");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
 
     }
-    private void initTextArea() {
 
-        JTextArea textArea = new JTextArea();
-        JScrollPane scrollPane = new JScrollPane(textArea);
 
-        textArea.setLineWrap(true);
-        textArea.setWrapStyleWord(true);
+    private JPanel createFileSelectGroup(){
 
-        createLayout(scrollPane);
+        JButton load = new JButton("Load");
+        JButton save = new JButton("Save");
+
+        load.addActionListener( actionEvent -> {
+            textArea.setText( fileLoader.loadFile( textField.getText() ) );
+        });
+        save.addActionListener( actionEvent -> {
+            fileLoader.saveFile( textField.getText(), textArea.getText());
+        });
+
+        return formFileSelectGroup(textField,load,save);
     }
 
 
-    private void createLayout (JComponent scrollPane) {
+    private JPanel formFileSelectGroup(JTextField textField, JButton load, JButton save) {
+        JPanel fileSelectGroup = new JPanel();
+
+        GroupLayout groupLayout = new GroupLayout(fileSelectGroup);
+
+        fileSelectGroup.setLayout(groupLayout);
+
+
+        groupLayout.setHorizontalGroup(groupLayout.createSequentialGroup()
+                        .addComponent(textField)
+                        .addGap(5)
+                        .addComponent(save)
+                        .addGap(5)
+                        .addComponent(load)
+
+
+        );
+
+        groupLayout.setVerticalGroup(groupLayout.createParallelGroup()
+                        .addComponent(textField)
+                        .addComponent(load)
+                        .addComponent(save)
+        );
+
+        groupLayout.linkSize(1,textField, load, save);
+
+        return fileSelectGroup;
+    }
+
+    private void createLayout(JComponent... argument) {
         Container pane = getContentPane();
         GroupLayout groupLayout = new GroupLayout(pane);
         pane.setLayout(groupLayout);
@@ -34,8 +80,16 @@ public class TextEditor extends JFrame {
         groupLayout.setAutoCreateContainerGaps(true);
         groupLayout.setAutoCreateGaps(true);
 
-        groupLayout.setHorizontalGroup(groupLayout.createParallelGroup().addComponent(scrollPane));
-        groupLayout.setVerticalGroup(groupLayout.createSequentialGroup().addComponent(scrollPane));
+        groupLayout.setHorizontalGroup(groupLayout.createParallelGroup()
+                .addComponent(argument[0])
+                .addComponent(argument[1])
+        );
+
+        groupLayout.setVerticalGroup(groupLayout.createSequentialGroup()
+                .addComponent(argument[0])
+                .addComponent(argument[1])
+        );
+
         pack();
     }
 }
