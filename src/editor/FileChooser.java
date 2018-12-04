@@ -6,7 +6,6 @@ import javax.swing.filechooser.FileSystemView;
 
 public class FileChooser {
     static void open() {
-
         JFileChooser fileChooser;
         String fileContent;
         /*
@@ -24,7 +23,7 @@ public class FileChooser {
         fileChooser.addChoosableFileFilter(filter);
         fileChooser.setAcceptAllFileFilterUsed(true);
 
-        if(fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION ) {
+        if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION ) {
             /*
                 Remember new start path
              */
@@ -43,7 +42,6 @@ public class FileChooser {
 
 
     static String save() {
-
         JFileChooser fileChooser;
         /*
            Try to use last path, or start with default one

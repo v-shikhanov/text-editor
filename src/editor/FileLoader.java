@@ -13,7 +13,7 @@ public class FileLoader {
         /*
            If file exists and not empty, read it
         */
-        if(file.isFile()) {
+        if (file.isFile()) {
             try {
                return Files.readString(Paths.get(fileName));
             } catch (IOException e) {
@@ -26,20 +26,17 @@ public class FileLoader {
     }
 
     static void saveFile(String fileName, String text, boolean usePrintLn) {
-
         /*
             If file name is empty
             user should select it
         */
-
-        if(fileName == null) {
+        if (fileName == null) {
             fileName = FileChooser.save();
         }
-
         /*
           * if user selected nothing
-         */
-        if(fileName == null) {
+        */
+        if (fileName == null) {
             return;
         } else {
             /*
@@ -52,7 +49,7 @@ public class FileLoader {
         /*
             If file not exists, create
         */
-        if(!file.isFile()) {
+        if (!file.isFile()) {
             try {
                 file.createNewFile();
             } catch (IOException e) {
@@ -65,7 +62,6 @@ public class FileLoader {
         try {
             PrintStream print = new PrintStream(file);
             Scanner scText = new Scanner(text);
-
 
             while (scText.hasNext()){
                 if (usePrintLn){

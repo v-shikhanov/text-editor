@@ -2,6 +2,8 @@ package editor;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 public class TextEditor extends JFrame {
     static JTextArea textArea = new JTextArea();
@@ -15,12 +17,12 @@ public class TextEditor extends JFrame {
         JMenuBar menu = menuCreator();
         JPanel fileSelectGroup = createFileSelectGroup();
         JScrollPane scrollPane = new JScrollPane(textArea);
-
+        addWindowListener(windowListener);
         createLayout(menu , fileSelectGroup, scrollPane);
 
         setSize(dimension);
         setMinimumSize(dimension);
-        setTitle("Text editor v 0.3");
+        setTitle("Text editor v 0.4");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
@@ -38,7 +40,12 @@ public class TextEditor extends JFrame {
         load.addActionListener( actionEvent -> FileChooser.open() );
         save.addActionListener( actionEvent -> FileLoader.saveFile( fileName, textArea.getText(), true));
         saveAs.addActionListener( actionEvent -> FileLoader.saveFile( null, textArea.getText(), true));
-        exit.addActionListener( actionEvent -> dispose() );
+        exit.addActionListener( actionEvent ->
+                {
+                    FileLoader.saveFile( null, textArea.getText(), true);
+                    dispose();
+                }
+        );
 
         menu.add(load);
         menu.add(save);
@@ -72,17 +79,18 @@ public class TextEditor extends JFrame {
 
 
         groupLayout.setHorizontalGroup(groupLayout.createSequentialGroup()
-                        .addComponent(textField)
-                        .addGap(5)
                         .addComponent(save)
                         .addGap(5)
                         .addComponent(load)
+                        .addGap(5)
+                        .addComponent(textField)
+
         );
 
         groupLayout.setVerticalGroup(groupLayout.createParallelGroup()
-                        .addComponent(textField)
                         .addComponent(load)
                         .addComponent(save)
+                        .addComponent(textField)
         );
 
         groupLayout.linkSize(1,textField, load, save);
@@ -114,4 +122,40 @@ public class TextEditor extends JFrame {
 
         pack();
     }
+
+    WindowListener windowListener = new WindowListener() {
+        @Override
+        public void windowOpened(WindowEvent e) {
+
+        }
+
+        @Override
+        public void windowClosing(WindowEvent e) {
+            FileLoader.saveFile( null, textArea.getText(), true);
+        }
+
+        @Override
+        public void windowClosed(WindowEvent e) {
+        }
+
+        @Override
+        public void windowIconified(WindowEvent e) {
+
+        }
+
+        @Override
+        public void windowDeiconified(WindowEvent e) {
+
+        }
+
+        @Override
+        public void windowActivated(WindowEvent e) {
+
+        }
+
+        @Override
+        public void windowDeactivated(WindowEvent e) {
+
+        }
+    };
 }
