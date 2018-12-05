@@ -10,19 +10,21 @@ public class TextEditor extends JFrame {
     static JTextField textField = new JTextField();
     static String fileName;
 
+    private Color backColor = new Color(241, 241, 241);
+    private Font font = new Font(null,Font.BOLD,15);
 
     public TextEditor() {
-        Dimension dimension = new Dimension(500,500);
+        Dimension dimension = new Dimension(600,500);
 
         JMenuBar menu = menuCreator();
         JPanel fileSelectGroup = createFileSelectGroup();
         JScrollPane scrollPane = new JScrollPane(textArea);
         addWindowListener(windowListener);
-        createLayout(menu , fileSelectGroup, scrollPane);
+        createLayout(menu, fileSelectGroup, scrollPane);
 
         setSize(dimension);
         setMinimumSize(dimension);
-        setTitle("Text editor v 0.4");
+        setTitle("Text editor v 0.5");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
@@ -30,7 +32,20 @@ public class TextEditor extends JFrame {
 
     private JMenuBar menuCreator(){
         JMenuBar menuBar = new JMenuBar();
-        JMenu menu = new JMenu("File");
+        JMenu file = menuFileCreator();
+        JMenu search = menuSearchCreator();
+        
+        file.setFont(font);
+        search.setFont(font);
+
+        menuBar.add(file);
+        menuBar.add(search);
+
+        return menuBar;
+    }
+
+    private JMenu menuFileCreator(){
+        JMenu file = new JMenu("File");
 
         JMenuItem load = new JMenuItem("Open");
         JMenuItem save = new JMenuItem("Save");
@@ -42,48 +57,97 @@ public class TextEditor extends JFrame {
         saveAs.addActionListener( actionEvent -> FileLoader.saveFile( null, textArea.getText(), true));
         exit.addActionListener( actionEvent ->
                 {
-                    FileLoader.saveFile( null, textArea.getText(), true);
+                    FileLoader.saveFile( fileName, textArea.getText(), true);
                     dispose();
                 }
         );
 
-        menu.add(load);
-        menu.add(save);
-        menu.add(saveAs);
-        menu.addSeparator();
-        menu.add(exit);
+        file.add(load);
+        file.add(save);
+        file.add(saveAs);
+        file.addSeparator();
+        file.add(exit);
 
-        menuBar.add(menu);
-
-        return menuBar;
+        return file;
     }
 
+    private JMenu menuSearchCreator(){
+        JMenu search = new JMenu("Search");
+
+        JMenuItem start = new JMenuItem("Start search");
+        JMenuItem prev = new JMenuItem("Previous match");
+        JMenuItem next = new JMenuItem("Next match");
+        JMenuItem useRegex = new JMenuItem("Use regular expressions");
+
+
+
+        search.add(start);
+        search.add(prev);
+        search.add(next);
+        search.add(useRegex);
+
+        return search;
+    }
 
     private JPanel createFileSelectGroup(){
-        JButton load = new JButton("Open");
-        JButton save = new JButton("Save");
+        ImageIcon saveIcon = new ImageIcon("img/save.png");
+        ImageIcon openIcon = new ImageIcon("img/open.png");
+        ImageIcon findIcon = new ImageIcon("img/find.png");
+        ImageIcon leftIcon = new ImageIcon("img/left.png");
+        ImageIcon rightIcon = new ImageIcon("img/right.png");
+
+        JButton load = new JButton(openIcon);
+        JButton save = new JButton(saveIcon);
+        JButton find = new JButton(findIcon);
+        JButton left = new JButton(leftIcon);
+        JButton right = new JButton(rightIcon);
+        JCheckBox useRegex = new JCheckBox("Use regex");
+
+        load.setPreferredSize(new Dimension(40,40));
+        save.setPreferredSize(new Dimension(40,40));
+        find.setPreferredSize(new Dimension(40,40));
+        left.setPreferredSize(new Dimension(40,40));
+        right.setPreferredSize(new Dimension(40,40));
+        useRegex.setFont(font);
+
+        load.setBorderPainted(false);
+        save.setBorderPainted(false);
+        find.setBorderPainted(false);
+        left.setBorderPainted(false);
+        right.setBorderPainted(false);
+
+        load.setBackground(backColor);
+        save.setBackground(backColor);
+        find.setBackground(backColor);
+        left.setBackground(backColor);
+        right.setBackground(backColor);
+        useRegex.setBackground(backColor);
+
+
 
         load.addActionListener( actionEvent -> FileChooser.open());
         save.addActionListener( actionEvent -> FileLoader.saveFile( fileName, textArea.getText(),true));
 
-        return formFileSelectGroup(textField,load,save);
+        return formFileSelectGroup(textField, load, save, find, left, right, useRegex);
     }
 
+    private JPanel formFileSelectGroup(JTextField textField, JButton load, JButton save, JButton find,
+                                       JButton left, JButton right, JCheckBox useRegex) {
 
-    private JPanel formFileSelectGroup(JTextField textField, JButton load, JButton save) {
         JPanel fileSelectGroup = new JPanel();
 
         GroupLayout groupLayout = new GroupLayout(fileSelectGroup);
 
         fileSelectGroup.setLayout(groupLayout);
 
-
         groupLayout.setHorizontalGroup(groupLayout.createSequentialGroup()
                         .addComponent(save)
-                        .addGap(5)
                         .addComponent(load)
-                        .addGap(5)
                         .addComponent(textField)
+                        .addComponent(find)
+                        .addComponent(left)
+                        .addComponent(right)
+                        .addComponent(useRegex)
 
         );
 
@@ -91,9 +155,14 @@ public class TextEditor extends JFrame {
                         .addComponent(load)
                         .addComponent(save)
                         .addComponent(textField)
+                        .addComponent(find)
+                        .addComponent(left)
+                        .addComponent(right)
+                        .addComponent(useRegex)
         );
 
-        groupLayout.linkSize(1,textField, load, save);
+        groupLayout.linkSize(0, load, save, find, left, right);
+        groupLayout.linkSize(1, load, save, find, left, right, useRegex);
 
         return fileSelectGroup;
     }
@@ -120,10 +189,11 @@ public class TextEditor extends JFrame {
 
         groupLayout.linkSize(1,menu, fileSelectGroup);
 
+        pane.setBackground(backColor);
         pack();
     }
 
-    WindowListener windowListener = new WindowListener() {
+    private WindowListener windowListener = new WindowListener() {
         @Override
         public void windowOpened(WindowEvent e) {
 
@@ -131,7 +201,7 @@ public class TextEditor extends JFrame {
 
         @Override
         public void windowClosing(WindowEvent e) {
-            FileLoader.saveFile( null, textArea.getText(), true);
+            FileLoader.saveFile( fileName, textArea.getText(), true);
         }
 
         @Override
