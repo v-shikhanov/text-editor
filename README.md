@@ -1,5 +1,5 @@
-# Text Editor
+Text editor.
 
-Project: Text Editor
+Here you can type a text, find something, edit, save and load. 
 
-Go to the *src* directory, change *Main.java* and put your *.java* file(s) in it.
+Simple interface- comfortable use.
