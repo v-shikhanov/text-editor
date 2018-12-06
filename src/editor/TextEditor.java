@@ -9,6 +9,7 @@ public class TextEditor extends JFrame {
     static JTextArea textArea = new JTextArea();
     static JTextField textField = new JTextField();
     static String fileName;
+    static JCheckBox useRegex = new JCheckBox("Use regex");
 
     private Color backColor = new Color(241, 241, 241);
     private Font font = new Font(null,Font.BOLD,15);
@@ -53,8 +54,13 @@ public class TextEditor extends JFrame {
         JMenuItem exit = new JMenuItem("Exit");
 
         load.addActionListener( actionEvent -> FileChooser.open() );
-        save.addActionListener( actionEvent -> FileLoader.saveFile( fileName, textArea.getText(), true));
-        saveAs.addActionListener( actionEvent -> FileLoader.saveFile( null, textArea.getText(), true));
+
+        save.addActionListener( actionEvent ->
+                FileLoader.saveFile( fileName, textArea.getText(), true));
+
+        saveAs.addActionListener( actionEvent ->
+                FileLoader.saveFile( null, textArea.getText(), true));
+
         exit.addActionListener( actionEvent ->
                 {
                     FileLoader.saveFile( fileName, textArea.getText(), true);
@@ -77,14 +83,16 @@ public class TextEditor extends JFrame {
         JMenuItem start = new JMenuItem("Start search");
         JMenuItem prev = new JMenuItem("Previous match");
         JMenuItem next = new JMenuItem("Next match");
-        JMenuItem useRegex = new JMenuItem("Use regular expressions");
+        JMenuItem useRegularex = new JMenuItem("Use regular expressions");
 
 
+        useRegularex.addActionListener( actionEvent ->
+                    useRegex.setSelected(!useRegex.isSelected()));
 
         search.add(start);
         search.add(prev);
         search.add(next);
-        search.add(useRegex);
+        search.add(useRegularex);
 
         return search;
     }
@@ -101,7 +109,6 @@ public class TextEditor extends JFrame {
         JButton find = new JButton(findIcon);
         JButton left = new JButton(leftIcon);
         JButton right = new JButton(rightIcon);
-        JCheckBox useRegex = new JCheckBox("Use regex");
 
         load.setPreferredSize(new Dimension(40,40));
         save.setPreferredSize(new Dimension(40,40));
@@ -123,10 +130,10 @@ public class TextEditor extends JFrame {
         right.setBackground(backColor);
         useRegex.setBackground(backColor);
 
-
-
         load.addActionListener( actionEvent -> FileChooser.open());
         save.addActionListener( actionEvent -> FileLoader.saveFile( fileName, textArea.getText(),true));
+        find.addActionListener( actionEvent -> TextSearch.search());
+
 
         return formFileSelectGroup(textField, load, save, find, left, right, useRegex);
     }
@@ -192,6 +199,7 @@ public class TextEditor extends JFrame {
         pane.setBackground(backColor);
         pack();
     }
+
 
     private WindowListener windowListener = new WindowListener() {
         @Override
