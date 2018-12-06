@@ -14,6 +14,9 @@ public class TextEditor extends JFrame {
     private Color backColor = new Color(241, 241, 241);
     private Font font = new Font(null,Font.BOLD,15);
 
+   // private Thread searchThread = new TextSearch();
+    TextSearch textSearch = new TextSearch();
+
     public TextEditor() {
         Dimension dimension = new Dimension(600,500);
 
@@ -86,8 +89,14 @@ public class TextEditor extends JFrame {
         JMenuItem useRegularex = new JMenuItem("Use regular expressions");
 
 
-        useRegularex.addActionListener( actionEvent ->
-                    useRegex.setSelected(!useRegex.isSelected()));
+        useRegularex.addActionListener( actionEvent -> {
+                useRegex.setSelected(!useRegex.isSelected());
+                textSearch.search();
+            }
+        );
+        start.addActionListener( actionEvent -> textSearch.search());
+        next.addActionListener( actionEvent -> textSearch.nextMatch());
+        prev.addActionListener( actionEvent -> textSearch.prevMatch());
 
         search.add(start);
         search.add(prev);
@@ -132,8 +141,10 @@ public class TextEditor extends JFrame {
 
         load.addActionListener( actionEvent -> FileChooser.open());
         save.addActionListener( actionEvent -> FileLoader.saveFile( fileName, textArea.getText(),true));
-        find.addActionListener( actionEvent -> TextSearch.search());
-
+        find.addActionListener( actionEvent -> textSearch.search());
+        right.addActionListener( actionEvent -> textSearch.nextMatch());
+        left.addActionListener( actionEvent -> textSearch.prevMatch());
+        useRegex.addActionListener( actionEvent -> textSearch.search());
 
         return formFileSelectGroup(textField, load, save, find, left, right, useRegex);
     }
@@ -144,6 +155,8 @@ public class TextEditor extends JFrame {
         JPanel fileSelectGroup = new JPanel();
 
         GroupLayout groupLayout = new GroupLayout(fileSelectGroup);
+
+        textField.addActionListener( actionEvent -> textSearch.search());
 
         fileSelectGroup.setLayout(groupLayout);
 

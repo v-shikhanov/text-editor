@@ -7,55 +7,44 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class TextSearch extends Thread {
+public class TextSearch {
 
     static  ArrayList<Integer> startIndexes = new ArrayList<>();
     static  ArrayList<Integer> endIndexes = new ArrayList<>();
 
-    private static int matchNum = 0;
+    static int matchNum = 0;
 
-    static void search(){
-        matchNum = 0;
-        startIndexes.clear();
-        endIndexes.clear();
-        findAllEntrings();
+    static boolean threadAtWork = false;
 
+    void search(){
+        Thread find = new FindMatches();
+        /*
+            protect from second call
+         */
+        if (!find.isAlive()) {
+            find.start();
+        }
     }
 
-    static private void findAllEntrings() {
-        String  foundText = TextEditor.textField.getText();
-        String text = TextEditor.textArea.getText();
-
-        if (foundText.length() == 0) {
-            return;
+    void nextMatch(){
+        ShowNextMatch showNextMatch = new ShowNextMatch();
+        if(!showNextMatch.isAlive()) {
+            showNextMatch.run();
         }
-
-        if (TextEditor.useRegex.isSelected()) {
-            Pattern pattern = Pattern.compile(foundText);
-            Matcher matcher = pattern.matcher(text);
-
-            while (matcher.find() ){
-                startIndexes.add(matcher.start());
-                endIndexes.add(matcher.end());
-            }
-
-        } else {
-            int index = 0;
-
-            while (true) {
-                index = text.indexOf(foundText, index);
-                if (index == -1) {
-                    break;
-                }
-                startIndexes.add(index);
-                index += foundText.length();
-                endIndexes.add(index);
-            }
-        }
-        selectMatch(matchNum);
     }
 
-    private static void selectMatch( int matchNum ) {
+    void prevMatch(){
+        ShowPrevMatch showPrevMatch = new ShowPrevMatch();
+        if (!showPrevMatch.isAlive()) {
+            showPrevMatch.run();
+        }
+    }
+
+    synchronized static void setThreadAtWork(boolean val) {
+        threadAtWork = val;
+    }
+
+    static void selectMatch( int matchNum ) {
         if (startIndexes.size() <= matchNum) {
             return;
         }
@@ -63,16 +52,6 @@ public class TextSearch extends Thread {
         TextEditor.textArea.select(startIndexes.get(matchNum), endIndexes.get(matchNum));
         TextEditor.textArea.grabFocus();
     }
-
-    @Override
-    public void run(){
-        search();
-    }
 }
 
 
-
-
-class FindAllEntrings{
-
-}
