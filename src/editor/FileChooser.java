@@ -23,7 +23,7 @@ public class FileChooser {
         fileChooser.addChoosableFileFilter(filter);
         fileChooser.setAcceptAllFileFilterUsed(true);
 
-        if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION ) {
+        if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             /*
                 Remember new start path
              */
