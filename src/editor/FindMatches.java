@@ -12,10 +12,6 @@ public class FindMatches extends Thread{
         String  foundText = TextEditor.textField.getText();
         String text = TextEditor.textArea.getText();
 
-        while (TextSearch.threadAtWork) {}
-
-        TextSearch.setThreadAtWork(true);
-
         if (foundText.length() == 0) {
             return;
         }
@@ -43,7 +39,6 @@ public class FindMatches extends Thread{
             }
         }
         TextSearch.selectMatch(TextSearch.matchNum);
-        TextSearch.setThreadAtWork(false);
     }
 
     @Override

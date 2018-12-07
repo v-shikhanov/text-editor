@@ -91,12 +91,12 @@ public class TextEditor extends JFrame {
 
         useRegularex.addActionListener( actionEvent -> {
                 useRegex.setSelected(!useRegex.isSelected());
-                textSearch.search();
+                textSearch.search(TextSearch.FIND);
             }
         );
-        start.addActionListener( actionEvent -> textSearch.search());
-        next.addActionListener( actionEvent -> textSearch.nextMatch());
-        prev.addActionListener( actionEvent -> textSearch.prevMatch());
+        start.addActionListener( actionEvent -> textSearch.search(TextSearch.FIND));
+        next.addActionListener( actionEvent -> textSearch.search(TextSearch.NEXT));
+        prev.addActionListener( actionEvent -> textSearch.search(TextSearch.PREV));
 
         search.add(start);
         search.add(prev);
@@ -141,10 +141,10 @@ public class TextEditor extends JFrame {
 
         load.addActionListener( actionEvent -> FileChooser.open());
         save.addActionListener( actionEvent -> FileLoader.saveFile( fileName, textArea.getText(),true));
-        find.addActionListener( actionEvent -> textSearch.search());
-        right.addActionListener( actionEvent -> textSearch.nextMatch());
-        left.addActionListener( actionEvent -> textSearch.prevMatch());
-        useRegex.addActionListener( actionEvent -> textSearch.search());
+        find.addActionListener( actionEvent -> textSearch.search(TextSearch.FIND));
+        right.addActionListener( actionEvent -> textSearch.search(TextSearch.NEXT));
+        left.addActionListener( actionEvent -> textSearch.search(TextSearch.PREV));
+        useRegex.addActionListener( actionEvent -> textSearch.search(TextSearch.FIND));
 
         return formFileSelectGroup(textField, load, save, find, left, right, useRegex);
     }
@@ -156,7 +156,7 @@ public class TextEditor extends JFrame {
 
         GroupLayout groupLayout = new GroupLayout(fileSelectGroup);
 
-        textField.addActionListener( actionEvent -> textSearch.search());
+        textField.addActionListener( actionEvent -> textSearch.search(TextSearch.FIND));
 
         fileSelectGroup.setLayout(groupLayout);
 
