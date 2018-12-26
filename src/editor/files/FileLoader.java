@@ -1,13 +1,24 @@
-package editor;
+package editor.files;
+
+import editor.ui.TextEditor;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
-
+/**
+ *  Class for working with files.
+ *
+ * @see FileChooser selects files to open or save
+ */
 public class FileLoader {
 
+    /**
+     * This method loads text from file
+     * @param fileName
+     * @return text from file, if it exists
+     */
     static String loadFile(String fileName)  {
         File file = new File(fileName);
         /*
@@ -25,7 +36,13 @@ public class FileLoader {
         }
     }
 
-    static void saveFile(String fileName, String text, boolean usePrintLn) {
+    /**
+     * Method saves text to file
+     * @param fileName
+     * @param text
+     * @param usePrintLn true if every string should be started from a new line
+     */
+    public static void saveFile(String fileName, String text, boolean usePrintLn) {
         /*
             If file name is empty
             user should select it
@@ -42,7 +59,7 @@ public class FileLoader {
             /*
                 Remember the file to work with
             */
-            TextEditor.fileName = fileName;
+            TextEditor.setFileName(fileName);
         }
 
         File file = new File(fileName);

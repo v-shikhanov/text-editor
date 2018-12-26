@@ -1,43 +1,79 @@
-package editor;
+package editor.ui;
+
+import editor.files.FileChooser;
+import editor.files.FileLoader;
+import editor.search.TextSearch;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
+/**
+ *  This is the base class of application, which creates UI and calling methods to work with documents
+ */
 public class TextEditor extends JFrame {
-    static JTextArea textArea = new JTextArea();
-    static JTextField textField = new JTextField();
-    static String fileName;
-    static JCheckBox useRegex = new JCheckBox("Use regex");
 
-    private Color backColor = new Color(241, 241, 241);
-    private Font font = new Font(null,Font.BOLD,15);
+    /**
+     * This is a working zone of application -text area for text typing and redacting, text field for searching
+     * words, letters, regex in text. Use regex is a check box which controls searching mechanism
+     */
+    private static JTextArea textArea;
+    private static JTextField textField;
+    private static JCheckBox useRegex;
 
-   // private Thread searchThread = new TextSearch();
-    TextSearch textSearch = new TextSearch();
+    /**
+     *  That's common fields of UI to cast all elements to one style.
+     */
+    private Color backColor;
+    private Font font;
 
+    /**
+     *  That's a file name which using for access to file to work with
+     */
+    private static String fileName;
+
+    /**
+     *  That's TextSearch class instance that implements searching inside of text
+     */
+    private TextSearch textSearch;
+
+    /**
+     * Class constructor that initialising and running an app
+     */
     public TextEditor() {
-        Dimension dimension = new Dimension(600,500);
+        textArea = new JTextArea();
+        textField = new JTextField();
+        useRegex = new JCheckBox("Use regex");
+        backColor = new Color(241, 241, 241);
+        font = new Font(null,Font.BOLD,15);
+        backColor = new Color(241, 241, 241);
+        font = new Font(null,Font.BOLD,15);
+        textSearch = new TextSearch();
 
-        JMenuBar menu = menuCreator();
-        JPanel fileSelectGroup = createFileSelectGroup();
+        Dimension dimension = new Dimension(600,500);
+        JMenuBar menu = createMenu();
+        JPanel workingBar = createWorkingBar();
         JScrollPane scrollPane = new JScrollPane(textArea);
         addWindowListener(windowListener);
-        createLayout(menu, fileSelectGroup, scrollPane);
+        createLayout(menu, workingBar, scrollPane);
 
         setSize(dimension);
         setMinimumSize(dimension);
-        setTitle("Text editor v 0.5");
+        setTitle("Text editor v 1.0");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
     }
 
-    private JMenuBar menuCreator(){
+    /**
+     * Method creates a menu which contains file and searching zones
+     * @return menu
+     */
+    private JMenuBar createMenu(){
         JMenuBar menuBar = new JMenuBar();
-        JMenu file = menuFileCreator();
-        JMenu search = menuSearchCreator();
+        JMenu file = createFileMenu();
+        JMenu search = createSearchingMenu();
         
         file.setFont(font);
         search.setFont(font);
@@ -48,7 +84,11 @@ public class TextEditor extends JFrame {
         return menuBar;
     }
 
-    private JMenu menuFileCreator(){
+    /**
+     * Method creates File section of menu
+     * @return menuFile
+     */
+    private JMenu createFileMenu(){
         JMenu file = new JMenu("File");
 
         JMenuItem load = new JMenuItem("Open");
@@ -80,7 +120,11 @@ public class TextEditor extends JFrame {
         return file;
     }
 
-    private JMenu menuSearchCreator(){
+    /**
+     * Method creates Search section of menu
+     * @return menuFile
+     */
+    private JMenu createSearchingMenu(){
         JMenu search = new JMenu("Search");
 
         JMenuItem start = new JMenuItem("Start search");
@@ -106,37 +150,23 @@ public class TextEditor extends JFrame {
         return search;
     }
 
-    private JPanel createFileSelectGroup(){
-        ImageIcon saveIcon = new ImageIcon("img/save.png");
-        ImageIcon openIcon = new ImageIcon("img/open.png");
-        ImageIcon findIcon = new ImageIcon("img/find.png");
-        ImageIcon leftIcon = new ImageIcon("img/left.png");
-        ImageIcon rightIcon = new ImageIcon("img/right.png");
+    /**
+     * Method creates a group of buttons and searching elements for work with application
+     * @return JPanel with buttons, text field for searching and use regex checkbox
+     */
 
-        JButton load = new JButton(openIcon);
-        JButton save = new JButton(saveIcon);
-        JButton find = new JButton(findIcon);
-        JButton left = new JButton(leftIcon);
-        JButton right = new JButton(rightIcon);
+    private JPanel createWorkingBar() {
 
-        load.setPreferredSize(new Dimension(40,40));
-        save.setPreferredSize(new Dimension(40,40));
-        find.setPreferredSize(new Dimension(40,40));
-        left.setPreferredSize(new Dimension(40,40));
-        right.setPreferredSize(new Dimension(40,40));
+        JPanel fileSelectGroup = new JPanel();
+
+        GroupLayout groupLayout = new GroupLayout(fileSelectGroup);
+
+        JButton load = configureButtons("img/open.png");
+        JButton save = configureButtons("img/save.png");
+        JButton find = configureButtons("img/find.png");
+        JButton left = configureButtons("img/left.png");
+        JButton right = configureButtons("img/right.png");
         useRegex.setFont(font);
-
-        load.setBorderPainted(false);
-        save.setBorderPainted(false);
-        find.setBorderPainted(false);
-        left.setBorderPainted(false);
-        right.setBorderPainted(false);
-
-        load.setBackground(backColor);
-        save.setBackground(backColor);
-        find.setBackground(backColor);
-        left.setBackground(backColor);
-        right.setBackground(backColor);
         useRegex.setBackground(backColor);
 
         load.addActionListener( actionEvent -> FileChooser.open());
@@ -145,16 +175,6 @@ public class TextEditor extends JFrame {
         right.addActionListener( actionEvent -> textSearch.search(TextSearch.NEXT));
         left.addActionListener( actionEvent -> textSearch.search(TextSearch.PREV));
         useRegex.addActionListener( actionEvent -> textSearch.search(TextSearch.FIND));
-
-        return formFileSelectGroup(textField, load, save, find, left, right, useRegex);
-    }
-
-    private JPanel formFileSelectGroup(JTextField textField, JButton load, JButton save, JButton find,
-                                       JButton left, JButton right, JCheckBox useRegex) {
-
-        JPanel fileSelectGroup = new JPanel();
-
-        GroupLayout groupLayout = new GroupLayout(fileSelectGroup);
 
         textField.addActionListener( actionEvent -> textSearch.search(TextSearch.FIND));
 
@@ -187,7 +207,13 @@ public class TextEditor extends JFrame {
         return fileSelectGroup;
     }
 
-    private void createLayout(JComponent menu ,JComponent fileSelectGroup,JComponent scrollPane) {
+    /**
+     * method creates a layout of application with menu, working panel and text area
+     * @param menu
+     * @param workingBar
+     * @param scrollPane
+     */
+    private void createLayout(JComponent menu, JComponent workingBar, JComponent scrollPane) {
         Container pane = getContentPane();
         GroupLayout groupLayout = new GroupLayout(pane);
         pane.setLayout(groupLayout);
@@ -197,22 +223,53 @@ public class TextEditor extends JFrame {
 
         groupLayout.setHorizontalGroup(groupLayout.createParallelGroup()
                 .addComponent(menu)
-                .addComponent(fileSelectGroup)
+                .addComponent(workingBar)
                 .addComponent(scrollPane)
         );
 
         groupLayout.setVerticalGroup(groupLayout.createSequentialGroup()
                 .addComponent(menu)
-                .addComponent(fileSelectGroup)
+                .addComponent(workingBar)
                 .addComponent(scrollPane)
         );
 
-        groupLayout.linkSize(1,menu, fileSelectGroup);
+        groupLayout.linkSize(1,menu, workingBar);
 
         pane.setBackground(backColor);
         pack();
     }
 
+    /**
+     * This method creates and configure button to common style
+     * @param filename of icon
+     * @return button
+     */
+    private JButton configureButtons(String filename) {
+        JButton button = new JButton( new ImageIcon(filename));
+        button.setPreferredSize(new Dimension(40,40));
+        button.setBorderPainted(false);
+        button.setBackground(backColor);
+        return button;
+    }
+
+    /**
+     * Getters and setters of class
+     */
+    public static JTextArea getTextArea() {
+        return textArea;
+    }
+
+    public static JTextField getTextField() {
+        return textField;
+    }
+
+    public static JCheckBox getUseRegex() {
+        return useRegex;
+    }
+
+    public static void setFileName(String fileName) {
+        TextEditor.fileName = fileName;
+    }
 
     private WindowListener windowListener = new WindowListener() {
         @Override
