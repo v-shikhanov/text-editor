@@ -1,11 +1,22 @@
-package editor;
+package editor.files;
+
+import editor.ui.TextEditor;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 
+/**
+ *  Class for selects files via JFileChooser UI element for open and save it
+ *
+ * @see FileLoader - opens and saves files
+ */
 public class FileChooser {
-    static void open() {
+
+    /**
+     * This method opens file
+     */
+    public static void open() {
         JFileChooser fileChooser;
         String fileContent;
         /*
@@ -29,18 +40,19 @@ public class FileChooser {
              */
             path = fileChooser.getSelectedFile().getParent();
             FileLoader.saveFile("path.txt", path, false);
-
             /*
                 Load contents from file
              */
-
             fileContent = FileLoader.loadFile(fileChooser.getSelectedFile().getAbsolutePath());
-            TextEditor.fileName = fileChooser.getSelectedFile().getAbsolutePath();
-            TextEditor.textArea.setText(fileContent);
+            TextEditor.setFileName(fileChooser.getSelectedFile().getAbsolutePath());
+            TextEditor.getTextArea().setText(fileContent);
         }
     }
 
-
+    /**
+     * This metod saves the file
+     * @return path to it
+     */
     static String save() {
         JFileChooser fileChooser;
         /*
