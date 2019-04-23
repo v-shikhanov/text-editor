@@ -3,25 +3,26 @@ package editor.search;
 import editor.ui.TextEditor;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
- *  Base class for searching elements of text inside of it
- *
+ * Base class for searching elements of text inside of it
  * @see FindMatches -creates list of indexes of match(their coordinates in text)
  * @see ShowPrevMatch -selects previous match
  * @see ShowNextMatch -selects next match
  */
 public class TextSearch {
-
     /**
-     *  List of indexes of matches inside of text
+     * List of indexes of matches inside of text for highlighting found pattern in text
+     * end indexes used for regex use case when length of pattern could be different
      */
-    static  ArrayList<Integer> startIndexes;
-    static  ArrayList<Integer> endIndexes;
+    private static List<Integer> startIndexes = Collections.synchronizedList(new ArrayList<>());
+    private static List<Integer> endIndexes = Collections.synchronizedList(new ArrayList<>());
     /**
-     *  Current position inside of matches indexes
+     * Current position inside of matches indexes
      */
-    static int matchNum;
+    private static volatile int matchNum;
 
     /**
      * Thread for work with searching
@@ -33,29 +34,27 @@ public class TextSearch {
     /**
      * Constants for work with searching
      */
-    final public static int  NEXT = 3;
-    final public static int  FIND = 2;
-    final public static int  PREV = 1;
+    public enum SearchingAction {
+        NEXT,
+        FIND,
+        PREV
+    }
 
     /**
-     *  Constructor of class
+     * Constructor of class
      */
     public TextSearch() {
-        startIndexes = new ArrayList<>();
-        endIndexes = new ArrayList<>();
         matchNum = 0;
-
         find = new FindMatches();
         showNextMatch = new ShowNextMatch();
         showPrevMatch = new ShowPrevMatch();
-
     }
 
     /**
      * Method for matches searching and surfing inside of matches
-     * @param operationCode what operation should be completed
+     * @param searchingAction what operation should be completed
      */
-    public void search(int operationCode){
+    public void search(SearchingAction searchingAction) {
 
         try {
             find.join();
@@ -75,7 +74,7 @@ public class TextSearch {
             e.printStackTrace();
         }
 
-        switch (operationCode){
+        switch (searchingAction){
             case NEXT : {
                 showNextMatch.run();
                 break;
@@ -90,13 +89,11 @@ public class TextSearch {
                 showPrevMatch.run();
                 break;
             }
-
-            default : break;
         }
     }
 
     /**
-     * Method highlits found match
+     * Method highlights found match
      * @param matchNum -position of match inside of match list( what match should be selected)
      */
     static void selectMatch(int matchNum) {
@@ -107,6 +104,25 @@ public class TextSearch {
         TextEditor.getTextArea().setCaretPosition(endIndexes.get(matchNum));
         TextEditor.getTextArea().select(startIndexes.get(matchNum), endIndexes.get(matchNum));
         TextEditor.getTextArea().grabFocus();
+    }
+
+    /*
+        Getters and setters
+     */
+    public static List<Integer> getStartIndexes() {
+        return startIndexes;
+    }
+
+    public static List<Integer> getEndIndexes() {
+        return endIndexes;
+    }
+
+    public static int getMatchNum() {
+        return matchNum;
+    }
+
+    public static void setMatchNum(int matchNum) {
+        TextSearch.matchNum = matchNum;
     }
 }
 

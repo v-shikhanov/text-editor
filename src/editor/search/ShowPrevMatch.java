@@ -4,18 +4,21 @@ package editor.search;
  * @see TextSearch
  * @see FindMatches
  */
-public class ShowPrevMatch extends Thread{
+public class ShowPrevMatch extends Thread {
 
     /**
      *  Method just surfing inside of list of matches and selects the previous one
      */
-    private void selectPrev(){
-        if (TextSearch.matchNum > 0) {
-            TextSearch.matchNum--;
+    private void selectPrev( ) {
+        int matchNum = TextSearch.getMatchNum();
+        if (matchNum > 0) {
+            matchNum--;
+            TextSearch.setMatchNum(matchNum);
         } else {
-            TextSearch.matchNum = TextSearch.startIndexes.size()-1;
+            matchNum = TextSearch.getStartIndexes().size() - 1;
+            TextSearch.setMatchNum(matchNum);
         }
-        TextSearch.selectMatch(TextSearch.matchNum);
+        TextSearch.selectMatch(matchNum);
     }
 
     @Override
