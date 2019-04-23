@@ -72,12 +72,16 @@ public class TextEditor extends JFrame {
         JMenuBar menuBar = new JMenuBar();
         JMenu file = createFileMenu();
         JMenu search = createSearchingMenu();
-        
+        JMenu regex = createRegexMenu();
+
         file.setFont(font);
         search.setFont(font);
+        regex.setFont(font);
 
         menuBar.add(file);
         menuBar.add(search);
+        menuBar.add(regex);
+
         return menuBar;
     }
 
@@ -144,6 +148,42 @@ public class TextEditor extends JFrame {
         search.add(useRegularex);
 
         return search;
+    }
+
+    /**
+     * Method creates regex menu for simple searching using regular expressions
+     * @return menuFile
+     */
+    private JMenu createRegexMenu() {
+        JMenu regex = new JMenu("Regex shorthands");
+
+        JMenuItem digit = new JMenuItem("Any digit");
+        JMenuItem nonDigit = new JMenuItem("A non-digit");
+        JMenuItem word = new JMenuItem("Any alphanumeric character (word)");
+        JMenuItem nonWord = new JMenuItem("A non-alphanumeric character");
+        JMenuItem space = new JMenuItem("Any whitespace character");
+        JMenuItem nonSpace = new JMenuItem("A non-whitespace character");
+
+        digit.addActionListener(actionEvent -> updateTextFieldWithRegex("\\d"));
+        nonDigit.addActionListener(actionEvent -> updateTextFieldWithRegex("\\D"));
+        word.addActionListener(actionEvent -> updateTextFieldWithRegex("\\w"));
+        nonWord.addActionListener(actionEvent -> updateTextFieldWithRegex("\\W"));
+        space.addActionListener(actionEvent -> updateTextFieldWithRegex("\\s"));
+        nonSpace.addActionListener(actionEvent -> updateTextFieldWithRegex("\\S"));
+
+        regex.add(digit);
+        regex.add(nonDigit);
+        regex.add(word);
+        regex.add(nonWord);
+        regex.add(space);
+        regex.add(nonSpace);
+        return regex;
+    }
+
+    private void updateTextFieldWithRegex(String regex) {
+        useRegex.setSelected(true);
+        textField.setText(textField.getText().concat(regex));
+        textSearch.search(TextSearch.SearchingAction.FIND);
     }
 
     /**
