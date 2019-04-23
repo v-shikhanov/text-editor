@@ -47,7 +47,6 @@ public class TextEditor extends JFrame {
         useRegex = new JCheckBox("Use regex");
         font = new Font(null,Font.BOLD,15);
         backColor = new Color(241, 241, 241);
-        font = new Font(null,Font.BOLD,15);
         textSearch = new TextSearch();
 
         Dimension dimension = new Dimension(600,500);
@@ -69,7 +68,7 @@ public class TextEditor extends JFrame {
      * Method creates a menu which contains file and searching zones
      * @return menu
      */
-    private JMenuBar createMenu(){
+    private JMenuBar createMenu() {
         JMenuBar menuBar = new JMenuBar();
         JMenu file = createFileMenu();
         JMenu search = createSearchingMenu();
@@ -79,7 +78,6 @@ public class TextEditor extends JFrame {
 
         menuBar.add(file);
         menuBar.add(search);
-
         return menuBar;
     }
 
@@ -87,7 +85,7 @@ public class TextEditor extends JFrame {
      * Method creates File section of menu
      * @return menuFile
      */
-    private JMenu createFileMenu(){
+    private JMenu createFileMenu() {
         JMenu file = new JMenu("File");
 
         JMenuItem load = new JMenuItem("Open");
@@ -95,17 +93,16 @@ public class TextEditor extends JFrame {
         JMenuItem saveAs = new JMenuItem("Save as");
         JMenuItem exit = new JMenuItem("Exit");
 
-        load.addActionListener(actionEvent -> FileChooser.open() );
+        load.addActionListener(actionEvent -> FileChooser.open());
 
         save.addActionListener(actionEvent ->
                 FileLoader.saveFile( fileName, textArea.getText(), true));
 
         saveAs.addActionListener(actionEvent ->
-                FileLoader.saveFile( null, textArea.getText(), true));
+                FileLoader.saveFile(null, textArea.getText(), true));
 
-        exit.addActionListener(actionEvent ->
-                {
-                    FileLoader.saveFile( fileName, textArea.getText(), true);
+        exit.addActionListener(actionEvent -> {
+                    FileLoader.saveFile(fileName, textArea.getText(), true);
                     dispose();
                 }
         );
@@ -123,7 +120,7 @@ public class TextEditor extends JFrame {
      * Method creates Search section of menu
      * @return menuFile
      */
-    private JMenu createSearchingMenu(){
+    private JMenu createSearchingMenu() {
         JMenu search = new JMenu("Search");
 
         JMenuItem start = new JMenuItem("Start search");
@@ -169,7 +166,7 @@ public class TextEditor extends JFrame {
         useRegex.setBackground(backColor);
 
         load.addActionListener(actionEvent -> FileChooser.open());
-        save.addActionListener(actionEvent -> FileLoader.saveFile( fileName, textArea.getText(),true));
+        save.addActionListener(actionEvent -> FileLoader.saveFile(fileName, textArea.getText(),true));
         find.addActionListener(actionEvent -> textSearch.search(TextSearch.SearchingAction.FIND));
         right.addActionListener(actionEvent -> textSearch.search(TextSearch.SearchingAction.NEXT));
         left.addActionListener(actionEvent -> textSearch.search(TextSearch.SearchingAction.PREV));
@@ -302,5 +299,4 @@ public class TextEditor extends JFrame {
 
         }
     };
-
 }

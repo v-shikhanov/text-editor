@@ -17,7 +17,7 @@ public class FileChooser {
         JFileChooser fileChooser;
         String fileContent;
         String path = FileLoader.loadFile("path.txt");
-        if (path != null){
+        if (path != null) {
             fileChooser = new JFileChooser(path);
         } else {
             fileChooser = new JFileChooser((FileSystemView.getFileSystemView().getHomeDirectory()));
@@ -44,7 +44,7 @@ public class FileChooser {
     static String save() {
         JFileChooser fileChooser;
         String path = FileLoader.loadFile("path.txt");
-        if (path != null){
+        if (path != null) {
             fileChooser = new JFileChooser(path);
         } else {
             fileChooser = new JFileChooser((FileSystemView.getFileSystemView().getHomeDirectory()));
@@ -53,7 +53,7 @@ public class FileChooser {
         fileChooser.setDialogTitle("Save text file");
         fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
 
-        if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION){
+        if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
             FileLoader.saveFile("path.txt", fileChooser.getSelectedFile().getParent(), false);
             return fileChooser.getSelectedFile().getAbsolutePath() + ".mytxt" ;
         }

@@ -14,7 +14,7 @@ public class FileLoader {
      * @param fileName
      * @return text from file, if it exists
      */
-    static String loadFile(String fileName)  {
+    static String loadFile(String fileName) {
         File file = new File(fileName);
         if (file.isFile()) {
             try {
