@@ -5,7 +5,7 @@ import editor.ui.TextEditor;
 import java.util.ArrayList;
 
 /**
- *  Base class for searching elements of text inside of it
+ * Base class for searching elements of text inside of it
  *
  * @see FindMatches -creates list of indexes of match(their coordinates in text)
  * @see ShowPrevMatch -selects previous match
@@ -14,12 +14,12 @@ import java.util.ArrayList;
 public class TextSearch {
 
     /**
-     *  List of indexes of matches inside of text
+     * List of indexes of matches inside of text
      */
     static  ArrayList<Integer> startIndexes;
     static  ArrayList<Integer> endIndexes;
     /**
-     *  Current position inside of matches indexes
+     * Current position inside of matches indexes
      */
     static int matchNum;
 
@@ -33,29 +33,29 @@ public class TextSearch {
     /**
      * Constants for work with searching
      */
-    final public static int  NEXT = 3;
-    final public static int  FIND = 2;
-    final public static int  PREV = 1;
+    public enum SearchingAction {
+        NEXT,
+        FIND,
+        PREV
+    }
 
     /**
-     *  Constructor of class
+     * Constructor of class
      */
     public TextSearch() {
         startIndexes = new ArrayList<>();
         endIndexes = new ArrayList<>();
         matchNum = 0;
-
         find = new FindMatches();
         showNextMatch = new ShowNextMatch();
         showPrevMatch = new ShowPrevMatch();
-
     }
 
     /**
      * Method for matches searching and surfing inside of matches
-     * @param operationCode what operation should be completed
+     * @param searchingAction what operation should be completed
      */
-    public void search(int operationCode){
+    public void search(SearchingAction searchingAction){
 
         try {
             find.join();
@@ -75,7 +75,7 @@ public class TextSearch {
             e.printStackTrace();
         }
 
-        switch (operationCode){
+        switch (searchingAction){
             case NEXT : {
                 showNextMatch.run();
                 break;
@@ -96,7 +96,7 @@ public class TextSearch {
     }
 
     /**
-     * Method highlits found match
+     * Method highlights found match
      * @param matchNum -position of match inside of match list( what match should be selected)
      */
     static void selectMatch(int matchNum) {

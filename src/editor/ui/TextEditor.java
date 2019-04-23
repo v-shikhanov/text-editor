@@ -45,7 +45,6 @@ public class TextEditor extends JFrame {
         textArea = new JTextArea();
         textField = new JTextField();
         useRegex = new JCheckBox("Use regex");
-        backColor = new Color(241, 241, 241);
         font = new Font(null,Font.BOLD,15);
         backColor = new Color(241, 241, 241);
         font = new Font(null,Font.BOLD,15);
@@ -96,15 +95,15 @@ public class TextEditor extends JFrame {
         JMenuItem saveAs = new JMenuItem("Save as");
         JMenuItem exit = new JMenuItem("Exit");
 
-        load.addActionListener( actionEvent -> FileChooser.open() );
+        load.addActionListener(actionEvent -> FileChooser.open() );
 
-        save.addActionListener( actionEvent ->
+        save.addActionListener(actionEvent ->
                 FileLoader.saveFile( fileName, textArea.getText(), true));
 
-        saveAs.addActionListener( actionEvent ->
+        saveAs.addActionListener(actionEvent ->
                 FileLoader.saveFile( null, textArea.getText(), true));
 
-        exit.addActionListener( actionEvent ->
+        exit.addActionListener(actionEvent ->
                 {
                     FileLoader.saveFile( fileName, textArea.getText(), true);
                     dispose();
@@ -133,14 +132,14 @@ public class TextEditor extends JFrame {
         JMenuItem useRegularex = new JMenuItem("Use regular expressions");
 
 
-        useRegularex.addActionListener( actionEvent -> {
+        useRegularex.addActionListener(actionEvent -> {
                 useRegex.setSelected(!useRegex.isSelected());
-                textSearch.search(TextSearch.FIND);
+                textSearch.search(TextSearch.SearchingAction.FIND);
             }
         );
-        start.addActionListener( actionEvent -> textSearch.search(TextSearch.FIND));
-        next.addActionListener( actionEvent -> textSearch.search(TextSearch.NEXT));
-        prev.addActionListener( actionEvent -> textSearch.search(TextSearch.PREV));
+        start.addActionListener(actionEvent -> textSearch.search(TextSearch.SearchingAction.FIND));
+        next.addActionListener(actionEvent -> textSearch.search(TextSearch.SearchingAction.NEXT));
+        prev.addActionListener(actionEvent -> textSearch.search(TextSearch.SearchingAction.PREV));
 
         search.add(start);
         search.add(prev);
@@ -169,15 +168,13 @@ public class TextEditor extends JFrame {
         useRegex.setFont(font);
         useRegex.setBackground(backColor);
 
-        load.addActionListener( actionEvent -> FileChooser.open());
-        save.addActionListener( actionEvent -> FileLoader.saveFile( fileName, textArea.getText(),true));
-        find.addActionListener( actionEvent -> textSearch.search(TextSearch.FIND));
-        right.addActionListener( actionEvent -> textSearch.search(TextSearch.NEXT));
-        left.addActionListener( actionEvent -> textSearch.search(TextSearch.PREV));
-        useRegex.addActionListener( actionEvent -> textSearch.search(TextSearch.FIND));
-
-        textField.addActionListener( actionEvent -> textSearch.search(TextSearch.FIND));
-
+        load.addActionListener(actionEvent -> FileChooser.open());
+        save.addActionListener(actionEvent -> FileLoader.saveFile( fileName, textArea.getText(),true));
+        find.addActionListener(actionEvent -> textSearch.search(TextSearch.SearchingAction.FIND));
+        right.addActionListener(actionEvent -> textSearch.search(TextSearch.SearchingAction.NEXT));
+        left.addActionListener(actionEvent -> textSearch.search(TextSearch.SearchingAction.PREV));
+        useRegex.addActionListener(actionEvent -> textSearch.search(TextSearch.SearchingAction.FIND));
+        textField.addActionListener(actionEvent -> textSearch.search(TextSearch.SearchingAction.FIND));
         fileSelectGroup.setLayout(groupLayout);
 
         groupLayout.setHorizontalGroup(groupLayout.createSequentialGroup()
@@ -188,7 +185,6 @@ public class TextEditor extends JFrame {
                         .addComponent(left)
                         .addComponent(right)
                         .addComponent(useRegex)
-
         );
 
         groupLayout.setVerticalGroup(groupLayout.createParallelGroup()
@@ -306,4 +302,5 @@ public class TextEditor extends JFrame {
 
         }
     };
+
 }

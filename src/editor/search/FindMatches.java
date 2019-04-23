@@ -28,7 +28,7 @@ public class FindMatches extends Thread{
             Pattern pattern = Pattern.compile(foundText);
             Matcher matcher = pattern.matcher(text);
 
-            while (matcher.find() ){
+            while (matcher.find()) {
                 TextSearch.startIndexes.add(matcher.start());
                 TextSearch.endIndexes.add(matcher.end());
             }
